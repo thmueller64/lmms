@@ -209,6 +209,21 @@ MidiTime Pattern::beatPatternLength() const
 Note * Pattern::addNote( const Note & _new_note, const bool _quant_pos )
 {
 	Note * new_note = new Note( _new_note );
+
+	// handle the case where notes are copied from the BB editor to the piano-roll
+	if (new_note->length().getTicks() == -193)
+	{
+		// the length of copied notes is set to the length of the instruments envelope
+		f_cnt_t envFrames = instrumentTrack()->envFrames();
+		tick_t noteLength = envFrames / Engine::framesPerTick();
+		// if notes have zero length due to rounding set the length to a small value
+		if (noteLength == 0)
+		{
+			noteLength = 1;
+		}
+		new_note->setLength(MidiTime(noteLength));
+	}
+
 	if( _quant_pos && gui->pianoRoll() )
 	{
 		new_note->quantizePos( gui->pianoRoll()->quantization() );
