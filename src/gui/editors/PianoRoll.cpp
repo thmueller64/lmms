@@ -4165,6 +4165,13 @@ void PianoRoll::pasteNotes()
 			cur_note.restoreState( list.item( i ).toElement() );
 			cur_note.setPos( cur_note.pos() + Note::quantized( m_timeLine->pos(), quantization() ) );
 
+			// handle case where notes are copied from BB editor
+			if (cur_note.length().getTicks() == -192)
+			{
+				// magic for addNote to indicate that paste came from BB editor
+				cur_note.setLength(MidiTime( -193 ));
+			}
+
 			// select it
 			cur_note.setSelected( true );
 
