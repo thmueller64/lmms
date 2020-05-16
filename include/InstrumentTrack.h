@@ -108,6 +108,12 @@ public:
 		return m_instrument;
 	}
 
+	f_cnt_t envFrames()
+	{
+		return m_soundShaping.envFrames();
+	}
+
+
 	void deleteNotePluginData( NotePlayHandle * _n );
 
 	// name-stuff
